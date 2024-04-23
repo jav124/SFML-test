@@ -1,17 +1,27 @@
+#include "Ball.hpp"
 #include <SFML/Graphics.hpp>
-using namespace sf;
+#include <vector>
 
-float speedX = -4.f;
-float speedY = -4.f;
+using namespace sf;
+using namespace std;
+
+float d = 25.f;
+vector<Ball> balls;
+Ball ball(d);
+
+void loop(RenderWindow &window);
 
 int main()
 {
-    RenderWindow window(VideoMode(800, 600), "SFML works!");
-    RectangleShape shape({60.f, 30.f});
-    shape.setPosition({400,300});
-    shape.setFillColor({190, 0, 150});
+    RenderWindow window(VideoMode(600, 400), "SFML works!");
     window.setFramerateLimit(60);
+    loop(window);
 
+    return 0;
+}
+
+void loop(RenderWindow &window)
+{
     while (window.isOpen())
     {
         Event event;
@@ -19,41 +29,29 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                // Check if left mouse button is pressed
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    Ball b(d, Mouse::getPosition(window).x, Mouse::getPosition(window).y);
+                    balls.push_back(b);
+
+                    
+                }
+            }
         }
 
-        if(Mouse::isButtonPressed(Mouse::Left)){
-            shape.rotate(15);
-        }
-        if(Mouse::isButtonPressed(Mouse::Right)){
-            shape.rotate(-15);
-        }
-
-        //window.clear();
-        if (shape.getPosition().x + shape.getSize().x > 800 ||
-            shape.getPosition().x < 0)
+        window.clear();
+        ball.update();
+        ball.draw(window);
+        for (auto &b : balls)
         {
-
-            shape.setFillColor({rand()%255,rand()%255, rand()%255});
-            speedX *= -1;
+            b.update();
+            b.draw(window);
         }
 
-        if (shape.getPosition().y + shape.getSize().y > 600 ||
-            shape.getPosition().y < 0)
-        {
-            shape.setFillColor({rand()%255,rand()%255, rand()%255});
-            speedY *= -1;
-        }
-
-        shape.move(speedX, speedY);
-        window.draw(shape);
         window.display();
     }
-
-    return 0;
 }
-
-struct Vector2f
-{
-    float x;
-    float y;
-};
