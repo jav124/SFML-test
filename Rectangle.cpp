@@ -1,9 +1,9 @@
 #include "Rectangle.hpp"
 
-Rectangle::Rectangle(Vector2f size)
+Rectangle::Rectangle(Vector2f size, Vector2i position)
 {
     this->shape = RectangleShape(size);
-    this->shape.setPosition({400.f, 300.f});
+    this->shape.setPosition(Vector2f(position));
     this->shape.setFillColor(Color(190, 0, 150));
     this->speed = Vector2f(4.f, 4.f);
 }
